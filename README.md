@@ -41,21 +41,25 @@ s2=pd.Series(['C','D'])
 df=pd.DataFrame({'A1':s1,'A2':s2})
 print(df)
 '''
-#DataFrame from List of Dictionaries
 
+#DataFrame from List of Dictionaries
 '''
 l=[{'Name':'A','Sr':'a'},{'Name':'B','Sr':'b'},{'Name':'C','Sr':'c'}]
 df=pd.DataFrame(l)
 print(df)
 '''
+
 # To Access Single Row
-'''
+
 idx=['Sub1','Sub2','Sub3']
 data={'A':[1,2,3],'B':[4,5,6],'C':[7,8,9]}
 df=pd.DataFrame(data,index=idx)
+
+#print(df.loc[:,:'A'])
+for i,val in df.iterrows():
+    print(val['B'])
 print(df)
-print(df.loc[:,:'A'])
-'''
+
 #Sort values in df:-->
 '''
 data={'Age':[2,1,3,5,4]}
