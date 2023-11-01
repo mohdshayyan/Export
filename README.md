@@ -50,7 +50,7 @@ print(df)
 '''
 
 # To Access Single Row
-
+'''
 idx=['Sub1','Sub2','Sub3']
 data={'A':[1,2,3],'B':[4,5,6],'C':[7,8,9]}
 df=pd.DataFrame(data,index=idx)
@@ -59,7 +59,7 @@ df=pd.DataFrame(data,index=idx)
 for i,val in df.iterrows():
     print(val['B'])
 print(df)
-
+'''
 #Sort values in df:-->
 '''
 data={'Age':[2,1,3,5,4]}
