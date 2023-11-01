@@ -92,3 +92,14 @@ df.columns=['List1']
 #df=df.rename({'Sub3':'S3'})#,axis='index')
 ###print(df)
 #-----------------------------------------------------------------------------------------
+'''
+import matplotlib.pyplot as plt
+boys = [8,5,6,10,11,9,7,16,2,4]
+girls=[4,10,11,12,2,3,8,7,13,14]
+d=[boys,girls]
+plt.xlabel('Boys')
+plt.ylabel('Girls')
+plt.boxplot(d)
+plt.grid(True)
+plt.show()
+'''
