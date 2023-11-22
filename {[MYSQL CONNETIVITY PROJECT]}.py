@@ -513,6 +513,7 @@ def getchoice():
                 print()
                 print()
                 print()
+                exit(0)
                 break
         else:
                 print("Invalid Choice!")
