@@ -7,7 +7,7 @@ import pandas as pd
 import mysql.connector
 import matplotlib.pyplot as plt
 from datetime import datetime
-# Define the function to add a new student
+
 # Making Connection
 mydb = mysql.connector.connect(
 host="localhost",
@@ -32,20 +32,28 @@ def create_students():
 
 # Define the function to add a new student
 def add_student():
-    id = input("Enter ID of student: ")
-    name = input("Enter student Name: ")
-    age = input("Enter student's age: ")
-    gender = input("Enter student gender: ")
-    Class = input("Enter student Class: ")
-    now = datetime.now()
-    date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    Id = input("Enter Id of student: ")
+    # Check if the Id already exists
     cursor = mydb.cursor()
-    # Inserting Values
-    sql = "INSERT INTO students (id, name, age, gender, Class, date_added) VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (id, name, age, gender, Class, date_time)
-    cursor.execute(sql, val)# Executing the SQL query
-    mydb.commit()# Committing the changes in the table
-    print(cursor.rowcount, "record(s) inserted.")
+    cursor.execute("SELECT * FROM students WHERE Id = %s", (Id,))
+    existing_students = cursor.fetchone()
+
+    if existing_students:
+        print("student with this Id already exists. Please enter a different Id.")
+    else:
+            name = input("Enter student Name: ")
+            age = input("Enter student's age: ")
+            gender = input("Enter student gender(m/f): ")
+            Class = input("Enter student Class: ")
+            now = datetime.now()
+            date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+            # Inserting Values
+            sql = "INSERT INTO students (Id, name, age, gender, Class, date_added) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (Id, name, age, gender, Class, date_time)
+            cursor.execute(sql, val)# Executing the SQL query
+            mydb.commit()# Committing the changes in the table
+            print(cursor.rowcount, "record(s) inserted.")
+
 
 # Define the function to view student details
 def view_students():
@@ -53,7 +61,7 @@ def view_students():
     cursor.execute("SELECT * FROM students")
     result = cursor.fetchall() 
     print("Press (f) to see in the form of DataFrame")
-    print("Press (i) to see the Saprate Index values")
+    print("Press (i) to see the Separate Index values")
     print("Press (l) to see in the form of list")
 
     ch = input("Enter your choice: ")
@@ -82,29 +90,29 @@ def view_students():
             lst4 = [row[3] for row in result_list]
             lst5 = [row[4] for row in result_list]
             lst6 = [row[5] for row in result_list]            
-            df = pd.DataFrame({'ID': lst1, 'Name': lst2, 'Age': lst3, 'Gender': lst4, 'Class': lst5,'Date_&_Time': lst6})
+            df = pd.DataFrame({'Id': lst1, 'Name': lst2, 'Age': lst3, 'Gender': lst4, 'Class': lst5,'Date_&_Time': lst6})
             print(df.to_markdown())
 
 # Define the function to update student details
 def update_student():
-    id = input("Enter student's ID: ")
+    Id = input("Enter student's Id: ")
     name = input("Enter student's Name: ")
     age = input("Enter studenlt's age: ")
-    gender = input("Enter student's gender: ")
+    gender = input("Enter student's gender(m/f): ")
     Class = input("Enter student's Class: ")
     cursor = mydb.cursor()
-    sql_up = "update students set name = %s, age = %s, gender = %s, Class = %s where id = %s"
-    val_up = (name, age, gender, Class,id)
+    sql_up = "update students set name = %s, age = %s, gender = %s, Class = %s where Id = %s"
+    val_up = (name, age, gender, Class,Id)
     cursor.execute(sql_up, val_up)
     mydb.commit()
     print(cursor.rowcount, "record(s) updated.")
 
 # Define the function to delete student details
 def delete_student():
-    id = input("Enter student ID: ")
+    Id = input("Enter student Id: ")
     cursor = mydb.cursor()
-    sql = "delete from students where id = %s"
-    val = (id,)
+    sql = "delete from students where Id = %s"
+    val = (Id,)
     cursor.execute(sql, val)
     mydb.commit()
     print(cursor.rowcount, "record(s) deleted.")
@@ -117,19 +125,28 @@ def create_Staff():
 # Define the function to add a new staff
 def add_staff():
     Id = input("Enter staff ID: ")
-    post = input("Enter staff Post: ")
-    name = input("Enter staff Name: ")
-    salary = input("Enter staff Salary: ")
-    phone = input("Enter staff Phone no: ")
-    now = datetime.now()
-    date_time = now.strftime("%Y-%m-%d %H:%M:%S")  
+    # Check if the ID already exists
     cursor = mydb.cursor()
-    # Inserting Values
-    sql = "INSERT INTO staff (Id, post, name, salary, phone, date_added) VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (Id, post, name, salary, phone, date_time)
-    cursor.execute(sql, val)
-    mydb.commit()
-    print(cursor.rowcount, "record(s) inserted.")
+    cursor.execute("SELECT * FROM staff WHERE Id = %s", (Id,))
+    existing_staff = cursor.fetchone()
+    if existing_staff:
+        print("Staff with this ID already exists. Please enter a different ID.")
+        # You might want to add more logic here, like asking the user to re-enter the ID.
+    else:
+        post = input("Enter staff Post: ")
+        name = input("Enter staff Name: ")
+        salary = input("Enter staff Salary: ")
+        phone = input("Enter staff Phone no: ")
+        now = datetime.now()
+        date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Inserting Values
+        sql = "INSERT INTO staff (Id, post, name, salary, phone, date_added) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (Id, post, name, salary, phone, date_time)
+        cursor.execute(sql, val)
+        mydb.commit()
+        print(cursor.rowcount, "record(s) inserted.")
+
 
 # Define the function to view student details
 def view_staff():
@@ -137,7 +154,7 @@ def view_staff():
     cursor.execute("SELECT * FROM staff")
     result = cursor.fetchall()
     print("Press (f) to see in the form of DataFrame")
-    print("Press (i) to see the Saprate Index values")
+    print("Press (i) to see the Separate Index values")
     print("Press (l) to see in the form of list")
     ch = input("Enter your choice: ")# Get the user's choice
     if ch=='i':
@@ -200,20 +217,27 @@ def create_fee():
 # Define the function to add Fee details
 def fee():
     SrNo = input("Enter Payer's ID: ")
-    Name = input("Enter Payer's Name: ")
-    Class = input("Enter Payer's Class: ")
-    Status = input("Enter Status (Paid/Due): ")
-    Quarter = input("Enter Quarter: ")
-    PaidAmt = input("Enter Paid Amount: ")
-    now = datetime.now()
-    date_time = now.strftime("%Y-%m-%d %H:%M:%S")    
-    cursor = mydb.cursor()# preparing a cursor object
-    # Inserting Values
-    sql = "INSERT INTO fee (SrNo, Name, Class, Status, Quarter, PaidAmt, date_added) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    val = (SrNo, Name, Class, Status, Quarter, PaidAmt, date_time)
-    cursor.execute(sql, val)
-    mydb.commit()# Committing the changes in the table
-    print(cursor.rowcount, "record(s) inserted.")
+    # Check if the ID already exists
+    cursor = mydb.cursor()
+    cursor.execute("SELECT * FROM fee WHERE SrNo = %s", (SrNo,))
+    existing_fee = cursor.fetchone()
+
+    if existing_fee:
+        print("fee with this ID already exists. Please enter a different SrNo.")
+    else:
+            Name = input("Enter Payer's Name: ")
+            Class = input("Enter Payer's Class: ")
+            Status = input("Enter Status (Paid/Due): ")
+            Quarter = input("Enter Quarter: ")
+            PaidAmt = input("Enter Paid Amount: ")
+            now = datetime.now()
+            date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+            # Inserting Values
+            sql = "INSERT INTO fee (SrNo, Name, Class, Status, Quarter, PaidAmt, date_added) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (SrNo, Name, Class, Status, Quarter, PaidAmt, date_time)
+            cursor.execute(sql, val)
+            mydb.commit()# Committing the changes in the table
+            print(cursor.rowcount, "record(s) inserted.")
 
 # Define the function to view Fee details
 def view_fee():
@@ -221,7 +245,7 @@ def view_fee():
     cursor.execute("SELECT * FROM fee")
     result = cursor.fetchall()
     print("Press (f) to see in the form of DataFrame")
-    print("Press (i) to see the Saprate Index values")
+    print("Press (i) to see the Separate Index values")
     print("Press (l) to see in the form of list")
 # Get the user's choice
     ch = input("Enter your choice: ")
@@ -297,15 +321,17 @@ def menu():# Menu function to display menu
 # if option first:
 def getchoice():
     while True:
-        create_database()    
+        create_database()
+        create_students()
+        create_Staff()
+        create_fee()
         menu()
         print("")
         ch = input("Enter your choice: ")# Get the user's choice
         if ch=='1':
             print("PRESS (a): To Add New Student record                                       PRESS (b): View Student details ")
             print("PRESS (c): To Update Student details                                           PRESS (d): Delete Student details")
-            ch = input("Enter your choice: ")# Get the user's choice
-            create_students()
+            ch = input("Enter your choice: ")# Get the user's choice            
             if ch=='a':
                 add_student()
                 input("Press ENTER KEY to continue.....")
@@ -327,7 +353,6 @@ def getchoice():
             print("PRESS (e) : Add New Staff record                                       PRESS (f) : View Staff details | ")
             print("PRESS (g) : UPDATE Staff details                                       PRESS (h) :Delete Staff details   ")
             opp =input("Enter your choice: ")# Get the user's choice
-            create_Staff()
             if opp=='e':
                 add_staff()
                 input("Press ENTER KEY to continue.....")
@@ -348,8 +373,7 @@ def getchoice():
         elif ch=='3':
             print("PRESS (i): Add Fee deposit details                                        PRESS (j): View Fee details ")
             print("PRESS (k): Update Fee details                                                PRESS (l): Delete Fee details")
-            opp = input("Enter your choice: ")# Get the user's choice
-            create_fee()
+            opp = input("Enter your choice: ")# Get the user's choice            
             if opp=='i':
                 fee()
                 input("Press ENTER KEY to continue.....")
