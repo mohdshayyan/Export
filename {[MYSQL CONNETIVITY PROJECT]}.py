@@ -28,7 +28,7 @@ def create_database():
 # Creating the table if it doesn't exist
 def create_students():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS students (Id VARCHAR(255),name VARCHAR(255), age VARCHAR(255), gender VARCHAR(255), Class VARCHAR(255),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS students (Id VARCHAR(255) PRIMARY KEY,name VARCHAR(255), age VARCHAR(255), gender VARCHAR(255), Class VARCHAR(255),date_added VARCHAR(255))')
 
 # Define the function to add a new student
 def add_student():
@@ -120,7 +120,7 @@ def delete_student():
 # CREATING A TABLE
 def create_Staff():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id varchar(50) primary key,post varchar(50),name varchar(50),salary varchar(50),phone varchar(50),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id varchar(50) ,post varchar(50),name varchar(50),salary varchar(50),phone varchar(50),date_added VARCHAR(255))')
 
 # Define the function to add a new staff
 def add_staff():
@@ -212,18 +212,18 @@ def delete_staff():
 # CREATING A TABLE
 def create_fee():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS fee(SrNo varchar(50) primary key,Name varchar(50),Class varchar(50),Status varchar(50),Quarter varchar(50),PaidAmt varchar(50),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS fee(Id varchar(50),Name varchar(50),Class varchar(50),Status varchar(50),Quarter varchar(50),PaidAmt varchar(50),date_added VARCHAR(255),FOREIGN KEY (Id) REFERENCES students(Id))')
 
 # Define the function to add Fee details
 def fee():
-    SrNo = input("Enter Payer's ID: ")
+    Id = input("Enter Payer's ID: ")
     # Check if the ID already exists
     cursor = mydb.cursor()
-    cursor.execute("SELECT * FROM fee WHERE SrNo = %s", (SrNo,))
+    cursor.execute("SELECT * FROM fee WHERE Id = %s", (Id,))
     existing_fee = cursor.fetchone()
 
     if existing_fee:
-        print("fee with this ID already exists. Please enter a different SrNo.")
+        print("fee with this ID already exists. Please enter a different Id.")
     else:
             Name = input("Enter Payer's Name: ")
             Class = input("Enter Payer's Class: ")
@@ -233,8 +233,8 @@ def fee():
             now = datetime.now()
             date_time = now.strftime("%Y-%m-%d %H:%M:%S")
             # Inserting Values
-            sql = "INSERT INTO fee (SrNo, Name, Class, Status, Quarter, PaidAmt, date_added) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (SrNo, Name, Class, Status, Quarter, PaidAmt, date_time)
+            sql = "INSERT INTO fee (Id, Name, Class, Status, Quarter, PaidAmt, date_added) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (Id, Name, Class, Status, Quarter, PaidAmt, date_time)
             cursor.execute(sql, val)
             mydb.commit()# Committing the changes in the table
             print(cursor.rowcount, "record(s) inserted.")
@@ -252,7 +252,7 @@ def view_fee():
     if ch=='i':
             result_list = [list(row) for row in result]
             lst1 = [row[0] for row in result_list]
-            print("SrNo is:", lst1)
+            print("Id is:", lst1)
             lst2 = [row[1] for row in result_list]
             print('Name is:', lst2)
             lst3 = [row[2] for row in result_list]
@@ -277,30 +277,30 @@ def view_fee():
             lst5 = [row[4] for row in result_list]
             lst6 = [row[5] for row in result_list]
             lst7 = [row[6] for row in result_list]            
-            df=pd.DataFrame({'SrNo':lst1,'Name':lst2,'Class':lst3,'Status':lst4,'Quarter':lst5,'PaidAmt':lst6,'Date_&_Time': lst7 })
+            df=pd.DataFrame({'Id':lst1,'Name':lst2,'Class':lst3,'Status':lst4,'Quarter':lst5,'PaidAmt':lst6,'Date_&_Time': lst7 })
             print(df.to_markdown())
 
 # Define the function to update Fee details
 def update_fee():
-    SrNo = input("Enter student SrNo: ")
+    Id = input("Enter student Id: ")
     Name = input("Enter student Name: ")
     Class = input("Enter student Class: ")
     Status = input("Enter student Status(Paid/Due): ")
     Quarter = input("Enter student Quarter: ")
     PaidAmt = input("Enter student PaidAmount: ")  
     cursor = mydb.cursor()
-    sqlx = "UPDATE fee SET Name = %s, Class = %s, Status = %s, Quarter = %s,PaidAmt = %s WHERE SrNo = %s"
-    valx = (Name,Class,Status,Quarter,PaidAmt,SrNo)
+    sqlx = "UPDATE fee SET Name = %s, Class = %s, Status = %s, Quarter = %s,PaidAmt = %s WHERE Id = %s"
+    valx = (Name,Class,Status,Quarter,PaidAmt,Id)
     cursor.execute(sqlx, valx)
     mydb.commit()
     print(cursor.rowcount, "record(s) updated.")
     
 # Define the function to delete Fee details
 def delete_fee():
-    SrNo = input("Enter student SrNo: ")
+    Id = input("Enter student Id: ")
     cursor = mydb.cursor()
-    sqle = "DELETE FROM fee WHERE SrNo = %s"
-    vale = (SrNo,)
+    sqle = "DELETE FROM fee WHERE Id = %s"
+    vale = (Id,)
     cursor.execute(sqle, vale)
     mydb.commit()
     print(cursor.rowcount, "record(s) deleted.")
@@ -452,7 +452,7 @@ def getchoice():
                 lst4 = [row[3] for row in result_list]
                 lst5 = [row[4] for row in result_list]
                 lst6 = [row[5] for row in result_list]
-                df=pd.DataFrame({'SrNo':lst1,'Name':lst2,'Class':lst3,'Status':lst4,'Quarter':lst5,'PaidAmt':lst6 })    
+                df=pd.DataFrame({'Id':lst1,'Name':lst2,'Class':lst3,'Status':lst4,'Quarter':lst5,'PaidAmt':lst6 })    
     # Sort the DataFrame by Quarter in ascending order
                 df.sort_values(by='PaidAmt')    
                 Name = df['Name']
