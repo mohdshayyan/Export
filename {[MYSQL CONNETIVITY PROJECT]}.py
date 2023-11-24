@@ -28,7 +28,7 @@ def create_database():
 # Creating the table if it doesn't exist
 def create_students():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS students (Id VARCHAR(255) PRIMARY KEY,name VARCHAR(255), age VARCHAR(255), gender VARCHAR(255), Class VARCHAR(255),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS students (Id INT PRIMARY KEY,name VARCHAR(255), age INT, gender VARCHAR(255), Class VARCHAR(255),date_added VARCHAR(255))')
 
 # Define the function to add a new student
 def add_student():
@@ -120,7 +120,7 @@ def delete_student():
 # CREATING A TABLE
 def create_Staff():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id varchar(50) ,post varchar(50),name varchar(50),salary varchar(50),phone varchar(50),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id INT PRIMARY KEY,post varchar(50),name varchar(50),salary varchar(50),phone char(10),date_added VARCHAR(255))')
 
 # Define the function to add a new staff
 def add_staff():
@@ -212,7 +212,7 @@ def delete_staff():
 # CREATING A TABLE
 def create_fee():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS fee(Id varchar(50),Name varchar(50),Class varchar(50),Status varchar(50),Quarter varchar(50),PaidAmt varchar(50),date_added VARCHAR(255),FOREIGN KEY (Id) REFERENCES students(Id))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS fee(Id INT,Name varchar(50),Class varchar(50),Status varchar(50),Quarter varchar(50),PaidAmt INT,date_added VARCHAR(255),FOREIGN KEY (Id) REFERENCES students(Id))')
 
 # Define the function to add Fee details
 def fee():
