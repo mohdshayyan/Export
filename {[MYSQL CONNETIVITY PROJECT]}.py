@@ -120,7 +120,7 @@ def delete_student():
 # CREATING A TABLE
 def create_Staff():
         cursor = mydb.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id INT PRIMARY KEY,post varchar(50),name varchar(50),salary varchar(50),phone char(10),date_added VARCHAR(255))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS Staff(Id INT,post varchar(50),name varchar(50),salary varchar(50),phone char(10),date_added VARCHAR(255),FOREIGN KEY (Id) REFERENCES students(Id))')
 
 # Define the function to add a new staff
 def add_staff():
@@ -396,7 +396,10 @@ def getchoice():
             print("Press (1) to see in the form of Graph b/w Name & Ages ")
             print("Press (2) to see in the form of Graph b/w Name & SALARY ")
             print("Press (3) to see in the form of Graph b/w Name & Paid Amount ")
-            print("Press (4) to see in the form of Graph b/w Distribution of Students and Teachers ")            
+            print("Press (4) to see in the form of Graph b/w Distribution of Students & Teachers ")#
+            print("Press (5) to see in the form of Graph b/w Distribution of Students ID & Name ")
+            print("Press (6) to see a Bar Graph b/w Number of Students and their Classes")
+            
             ch = input("Enter your choice: ")# Get the user's choice
             if ch == '1':
                 cursor = mydb.cursor()
@@ -501,7 +504,33 @@ def getchoice():
                 # Show the chart
                 plt.show()                
 #--------------------------------------------------------------------------------------------
-##### if option Fiveth:
+            elif ch=='5':  # Add this block for Line Graph b/w Name & Id
+                    cursor = mydb.cursor()
+                    cursor.execute("SELECT * FROM students")
+                    result = cursor.fetchall()
+                    result_list = [list(row) for row in result]
+                    lst1 = [row[0] for row in result_list]
+                    lst2 = [row[1] for row in result_list]
+            # Create a line graph
+                    plt.plot(lst1, lst2, marker='o')
+                    plt.xlabel('ID')
+                    plt.ylabel('Name')
+                    plt.title('Line Graph: ID vs Name')
+                    plt.show()
+            elif ch=='6':
+                    cursor = mydb.cursor()
+                    cursor.execute("SELECT Class, COUNT(*) as NumStudents FROM students GROUP BY Class")
+                    result = cursor.fetchall()
+                    result_list = [list(row) for row in result]
+                    classes = [row[0] for row in result_list]
+                    num_students = [row[1] for row in result_list]
+                    # Create a horizontal bar graph
+                    plt.barh(classes, num_students, color='skyblue')
+                    plt.xlabel('Number of Students')
+                    plt.ylabel('Class')
+                    plt.title('Number of Students in Each Class')
+                    plt.show()
+                           
         elif ch=='5':
                 print()
                 print("Exited !")
