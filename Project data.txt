@@ -1,0 +1,22 @@
+use school;
+INSERT INTO students (ID,Name, Age, Gender, Class) VALUES 
+(1,'John', 15, 'Male', '10A'),
+(2,'Alice', 14, 'Female', '10B'),
+(3,'Bob', 16, 'Male', '10A'),
+(4,'Eva', 15, 'Female', '10B'),
+(5,'Charlie', 14, 'Male', '10A'),
+(6,'Sophia', 16, 'Female', '10B');
+INSERT INTO staff (POST, NAME, SALARY, PHONE) VALUES 
+('Teacher', 'Mr. Johnson', 50000, '1234567890'),
+('Teacher', 'Mrs. Smith', 52000, '9876543210'),
+('Admin', 'Mr. Brown', 60000, '5551234567'),
+('Teacher', 'Miss Davis', 48000, '3334445555'),
+('Admin', 'Mrs. Wilson', 55000, '1112223333'),
+('Teacher', 'Mr. Taylor', 51000, '9998887777');
+INSERT INTO fee (Name, Class, Status, Quarter, PaidAmt) VALUES 
+('John', '10A', 'Paid', 'Q1', 200),
+('Alice', '10B', 'Not Paid', 'Q1', 0),
+('Bob', '10A', 'Paid', 'Q1', 250),
+('Eva', '10B', 'Paid', 'Q1', 180),
+('Charlie', '10A', 'Not Paid', 'Q1', 0),
+('Sophia', '10B', 'Paid', 'Q1', 220);
