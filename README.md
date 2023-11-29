@@ -8,4 +8,4 @@ https://youtu.be/SWSdBvPKPe0?si=tVkzOeP3GVsPBevi
 https://youtu.be/_0fC24qAd2A?si=4olAClMi3_ndXqwF
 
 https://youtu.be/7VMiSoukdTU?si=7WA_kgnddnHB8bkG
-netsh wlan show profile Wifi_name key=clear
+netsh wlan show profile Wf_name key=clear
