@@ -1,5 +1,5 @@
 import mysql.connector
-
+import matplotlib.pyplot as plt
 # Connecting to the MySQL server
 mydb = mysql.connector.connect(
     host="localhost",
@@ -45,8 +45,20 @@ def view_guests():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM Guests")
     result = cursor.fetchall()
-    for row in result:
-        print(row)
+    print("Press (r) to see the Record")    
+    print("Press (g) to see in the form of graph")
+    ch = input("Enter your choice: ")
+    if ch=='r':
+        for row in result:
+            print(row)
+    elif ch=='g':
+        # Adding a line chart
+        plt.figure(figsize=(8, 6))
+        plt.plot([row[0] for row in result], [row[5] for row in result], marker='o', linestyle='-', color='b')
+        plt.xlabel('Guest ID')
+        plt.ylabel('Rent')
+        plt.title('Rent Distribution of Guests')
+        plt.show()
 
 # Function to update guest details
 def update_guest():
@@ -94,8 +106,23 @@ def view_staff():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM Staff")
     result = cursor.fetchall()
-    for row in result:
-        print(row)
+    print("Press (r) to see the Record")    
+    print("Press (g) to see in the form of graph")
+    ch = input("Enter your choice: ")
+    if ch=='r':
+        for row in result:
+            print(row)
+    elif ch=='g':
+        # Adding a bar chart for staff salaries
+        plt.figure(figsize=(8, 6))
+        staff_names = [row[1] for row in result]
+        staff_salaries = [row[3] for row in result]
+        plt.bar(staff_names, staff_salaries, color='blue')
+        plt.xlabel('Staff Names')
+        plt.ylabel('Salaries')
+        plt.title('Staff Salaries')
+        plt.xticks(rotation=45, ha="right")
+        plt.show()       
 
 # Function to update staff details
 def update_staff():
@@ -103,7 +130,6 @@ def update_staff():
     name = input("Enter Staff Name: ")
     position = input("Enter Staff Position: ")
     salary = int(input("Enter Staff Salary: "))
-
     cursor = mydb.cursor()
     sql = "UPDATE Staff SET name = %s, position = %s, salary = %s WHERE Id = %s"
     val = (name, position, salary, staff_id)
@@ -139,9 +165,22 @@ def view_room_service():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM RoomService")
     result = cursor.fetchall()
-    for row in result:
-        print(row)
-
+    print("Press (r) to see the Record")    
+    print("Press (g) to see in the form of graph")
+    ch = input("Enter your choice: ")
+    if ch=='r':
+        for row in result:
+            print(row)
+    elif ch=='g':
+        # Adding pie chart
+        service_names = [row[2] for row in result]
+        service_charges = [row[3] for row in result]
+        plt.figure(figsize=(8, 8))
+        plt.pie(service_charges, labels=service_names, autopct='%1.1f%%', startangle=140)
+        plt.title('Distribution of Room Service Charges')
+        plt.axis('equal')
+        plt.show()
+        
 # Function to update room service details
 def update_room_service():
     service_id = int(input("Enter Service ID to update: "))
