@@ -46,12 +46,13 @@ def view_guests():
     cursor.execute("SELECT * FROM Guests")
     result = cursor.fetchall()
     print("Press (r) to see the Record")    
-    print("Press (g) to see in the form of graph")
+    print("Press (l) to see in the form of line graph")
+    print("Press (p) to see in the form of pie graph")    
     ch = input("Enter your choice: ")
     if ch=='r':
         for row in result:
             print(row)
-    elif ch=='g':
+    elif ch=='l':
         # Adding a line chart
         plt.figure(figsize=(8, 6))
         plt.plot([row[0] for row in result], [row[5] for row in result], marker='o', linestyle='-', color='b')
@@ -59,7 +60,15 @@ def view_guests():
         plt.ylabel('Rent')
         plt.title('Rent Distribution of Guests')
         plt.show()
-
+    elif ch=='p':
+        # Adding a pie chart
+        guest_names = [row[1] for row in result]
+        rents = [row[5] for row in result]
+        plt.figure(figsize=(8, 8))
+        plt.pie(rents, labels=guest_names, autopct='%1.1f%%', startangle=140)
+        plt.title('Rent Distribution of Guests')
+        plt.axis('equal')
+        plt.show()
 # Function to update guest details
 def update_guest():
     guest_id = int(input("Enter Guest ID to update: "))
@@ -107,12 +116,13 @@ def view_staff():
     cursor.execute("SELECT * FROM Staff")
     result = cursor.fetchall()
     print("Press (r) to see the Record")    
-    print("Press (g) to see in the form of graph")
+    print("Press (b) to see in the form of bar graph")
+    print("Press (l) to see in the form of line graph")    
     ch = input("Enter your choice: ")
     if ch=='r':
         for row in result:
             print(row)
-    elif ch=='g':
+    elif ch=='b':
         # Adding a bar chart for staff salaries
         plt.figure(figsize=(8, 6))
         staff_names = [row[1] for row in result]
@@ -123,7 +133,17 @@ def view_staff():
         plt.title('Staff Salaries')
         plt.xticks(rotation=45, ha="right")
         plt.show()       
-
+    elif ch=='l':
+        # Adding a line chart for staff salaries
+        plt.figure(figsize=(8, 6))
+        staff_names = [row[1] for row in result]
+        staff_salaries = [row[3] for row in result]
+        plt.plot(staff_names, staff_salaries, color='blue')
+        plt.xlabel('Staff Names')
+        plt.ylabel('Salaries')
+        plt.title('Staff Salaries')
+        plt.xticks(rotation=45, ha="right")
+        plt.show()
 # Function to update staff details
 def update_staff():
     staff_id = int(input("Enter Staff ID to update: "))
@@ -166,12 +186,22 @@ def view_room_service():
     cursor.execute("SELECT * FROM RoomService")
     result = cursor.fetchall()
     print("Press (r) to see the Record")    
-    print("Press (g) to see in the form of graph")
+    print("Press (p) to see in the form of graph")
+    print("Press (l) to see in the form of graph")    
     ch = input("Enter your choice: ")
     if ch=='r':
         for row in result:
             print(row)
-    elif ch=='g':
+    elif ch=='l':
+        # Adding pie chart
+        service_names = [row[2] for row in result]
+        service_charges = [row[3] for row in result]
+        plt.figure(figsize=(8, 8))
+        plt.plot(service_names, service_charges, color='blue')
+        plt.title('Distribution of Room Service Charges')
+        plt.axis('equal')
+        plt.show()
+    elif ch=='p':
         # Adding pie chart
         service_names = [row[2] for row in result]
         service_charges = [row[3] for row in result]
@@ -179,8 +209,7 @@ def view_room_service():
         plt.pie(service_charges, labels=service_names, autopct='%1.1f%%', startangle=140)
         plt.title('Distribution of Room Service Charges')
         plt.axis('equal')
-        plt.show()
-        
+        plt.show()        
 # Function to update room service details
 def update_room_service():
     service_id = int(input("Enter Service ID to update: "))
