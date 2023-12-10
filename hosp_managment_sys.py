@@ -50,9 +50,9 @@ def view_patients():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM Patients")
     result = cursor.fetchall()
-    print("Press (l) to see in the form of list")
     print("Press (f) to see in the form of DataFrame")
-    print("Press (g) to see in the form of graph")
+    print("Press (l) to see in the form of line graph")    
+    print("Press (h) to see in the form of histogram graph")    
     ch = input("Enter your choice: ")
     if ch=='f':
         result_list = [list(row) for row in result]
@@ -62,18 +62,22 @@ def view_patients():
         lst4 = [row[3] for row in result_list]
         df = pd.DataFrame({'Name': lst1, 'Age': lst2, 'Gender': lst3, 'contact': lst4})
         print(df.to_markdown())
-    elif ch=='l':
-        result_list = [list(row) for row in result]
-        print(result_list)
-    elif ch=='g':# Adding line chart
+    elif ch=='l':# Adding line chart
         plt.figure(figsize=(8, 6))
         plt.plot([row[0] for row in result], [row[2] for row in result], marker='o', linestyle='-', color='b')
         plt.xlabel('Patient ID')
         plt.ylabel('Age')
         plt.title('Age Distribution of Patients')
         plt.show()
+    elif ch=='h':
+        plt.figure(figsize=(8, 6))
+        plt.hist([row[2] for row in result], bins=20, color='skyblue', edgecolor='black')
+        plt.xlabel('Age')
+        plt.ylabel('Number of Patients')
+        plt.title('Age Distribution of Patients')
+        plt.show()
+            
 
-        
 # Define the function to update patient details
 def update_patient():
     patient_id = int(input("Enter patient ID to update: "))
@@ -115,9 +119,10 @@ def view_doctors():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM Doctors")
     result = cursor.fetchall()
-    print("Press (l) to see in the form of list")
     print("Press (f) to see in the form of DataFrame")
-    print("Press (g) to see in the form of graph")
+    print("Press (b) to see in the form of bar graph")    
+    print("Press (p) to see in the form of pie graph")
+    
     ch = input("Enter your choice: ")
     if ch=='f':
         result_list = [list(row) for row in result]
@@ -126,10 +131,18 @@ def view_doctors():
         lst3 = [row[2] for row in result_list]
         df = pd.DataFrame({'name': lst1, 'specialization': lst2, 'contact': lst3})
         print(df.to_markdown())
-    elif ch=='l':
-        result_list = [list(row) for row in result]
-        print(result_list)
-    elif ch == 'g':
+    elif ch == 'b':
+        # Extracting data for the bar chart
+        doctor_names = [row[1] for row in result]
+        doctor_contacts = [row[3] for row in result]
+        plt.figure(figsize=(10, 6))
+        plt.bar(doctor_names, doctor_contacts, color='green')
+        plt.xlabel('Doctor Names')
+        plt.ylabel('Contact Numbers')
+        plt.title('Contact Numbers of Doctors')
+        plt.xticks(rotation=45, ha="right")
+        plt.show()        
+    elif ch == 'p':
         # Extracting data for the pie chart
         specializations = [row[2] for row in result]
         unique_specializations = list(set(specializations))
@@ -183,10 +196,10 @@ def view_appointments():
     cursor = mydb.cursor()
     cursor.execute("SELECT * FROM Appointments")
     result = cursor.fetchall()
-    print("Press (l) to see in the form of list")
     print("Press (f) to see in the form of DataFrame")
-    print("Press (g) to see in the form of graph")
-    ch = input("Enter your choice: ")#patient_id, doctor_id, date, time
+    print("Press (b) to see in the form of bar graph")
+    print("Press (l) to see in the form of line graph")    
+    ch = input("Enter your choice: ")
     if ch=='f':
         result_list = [list(row) for row in result]
         lst1 = [row[0] for row in result_list]
@@ -195,21 +208,23 @@ def view_appointments():
         lst4 = [row[3] for row in result_list]
         df = pd.DataFrame({'patient_id': lst1, 'doctor_id': lst2, 'date': lst3, 'time': lst4})
         print(df.to_markdown())
-    elif ch=='l':
-        result_list = [list(row) for row in result]
-        print(result_list)
-    elif ch == 'g':
+    elif ch == 'l':
+        # Adding a line chart for appointment dates
+        plt.figure(figsize=(10, 6))
+        plt.plot([row[0] for row in result], [row[1] for row in result], marker='o', linestyle='-', color='b')
+        plt.xlabel('Appointment ID')
+        plt.ylabel('Patient ID')
+        plt.title('Patient Distribution in Appointments')
+        plt.show()        
+    elif ch == 'b':
         # Extracting dates from the 'date' column
         dates = [row[3] for row in result]
-
         # Counting the occurrences of each date
         date_counts = {}
         for date in dates:
             date_counts[date] = date_counts.get(date, 0) + 1
-
         # Sorting the dates for better visualization
         sorted_dates = sorted(date_counts.keys())
-
         # Creating a bar chart
         plt.figure(figsize=(10, 6))
         plt.bar(sorted_dates, [date_counts[date] for date in sorted_dates])
