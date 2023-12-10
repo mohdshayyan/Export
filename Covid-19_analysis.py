@@ -1,4 +1,6 @@
 import mysql.connector
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Connect to MySQL server
 mydb = mysql.connector.connect(
@@ -180,7 +182,6 @@ def update_test_result():
 # Function to delete a test result
 def delete_test_result():
     result_id = int(input("Enter test result ID to delete: "))
-
     cursor = mydb.cursor()
     sql = "DELETE FROM TestResults WHERE ResultID = %s"
     val = (result_id,)
@@ -188,12 +189,88 @@ def delete_test_result():
     mydb.commit()
     print("Test result deleted successfully.")
 
+# Function to generate and display various graphs
+def generate_graphs():
+    print("PRESS=>(1-6)")
+    choice = int(input("Enter your choice: "))
+    if choice == 1:# Histogram of Patient Ages
+        cursor = mydb.cursor()
+        cursor.execute("SELECT Age FROM Patients")
+        ages = cursor.fetchall()
+        ages = [age[0] for age in ages]
+        plt.hist(ages, bins=20, color='blue', edgecolor='black')
+        plt.title('Histogram of Patient Ages')
+        plt.xlabel('Age')
+        plt.ylabel('Frequency')
+        plt.show()
+    elif choice == 2: # Pie chart of Gender distribution
+        cursor = mydb.cursor()        
+        cursor.execute("SELECT Gender, COUNT(*) FROM Patients GROUP BY Gender")
+        gender_counts = cursor.fetchall()
+        genders = [gender[0] for gender in gender_counts]
+        counts = [count[1] for count in gender_counts]
+        plt.pie(counts, labels=genders, autopct='%1.1f%%', startangle=140)
+        plt.title('Gender Distribution of Patients')
+        plt.show()
+    elif choice == 3:
+        cursor = mydb.cursor()        
+    # Bar chart of Testing Center Capacities
+        cursor.execute("SELECT CenterName, Capacity FROM TestingCenters")
+        center_data = cursor.fetchall()
+        centers = [center[0] for center in center_data]
+        capacities = [capacity[1] for capacity in center_data]
+        plt.bar(centers, capacities, color='green')
+        plt.xlabel('Testing Center')
+        plt.ylabel('Capacity')
+        plt.title('Testing Center Capacities')
+        plt.xticks(rotation=45, ha="right")
+        plt.show()
+    elif choice == 4:
+    # Line chart of Patient Status changes
+        cursor = mydb.cursor()    
+        cursor.execute("SELECT PatientID, Status FROM Patients")
+        status_data = cursor.fetchall()
+        patients = [patient[0] for patient in status_data]
+        statuses = [status[1] for status in status_data]
+        plt.plot(patients, statuses, marker='o')
+        plt.xlabel('Patient ID')
+        plt.ylabel('Status')
+        plt.title('Patient Status Changes')
+        plt.show()
+    elif choice == 5:
+    # Scatter plot of Patient Ages and Testing Center Capacities
+        cursor = mydb.cursor()
+        cursor.execute("SELECT Age FROM Patients")
+        patient_ages = cursor.fetchall()
+        patient_ages = [age[0] for age in patient_ages]
+        cursor.execute("SELECT Capacity FROM TestingCenters")
+        center_capacities = cursor.fetchall()
+        center_capacities = [capacity[0] for capacity in center_capacities]
+        plt.scatter(patient_ages, center_capacities, color='red')
+        plt.xlabel('Patient Age')
+        plt.ylabel('Testing Center Capacity')
+        plt.title('Scatter Plot of Patient Ages and Testing Center Capacities')
+        plt.show()
+    elif choice == 6:
+# Box plot of Patient Ages
+        cursor = mydb.cursor()    
+        cursor.execute("SELECT Age FROM Patients")
+        patient_ages_data = cursor.fetchall()
+        patient_ages = [age[0] for age in patient_ages_data]
+        plt.boxplot([patient_ages])
+        plt.title('Box Plot of Patient Ages')
+        plt.xlabel('Patients')
+        plt.ylabel('Age')
+        plt.show()
+
+
+
 # Main function
 def main():
     create_tables()
     while True:
         print("\n--- Covid-19 Analysis ---")
-        print("1. Patients\n2. Testing Centers\n3. Test Results\n4. Exit")
+        print("1. Patient Module\n2. Testing Centers Module\n3. Test Results Module\n4. Generate Graphs Module\n5. Exit Module")
         choice = int(input("Enter your choice: "))
 
         if choice == 1:
@@ -203,8 +280,11 @@ def main():
         elif choice == 3:
             test_results_menu()
         elif choice == 4:
+            print("1.Graph\n2.Graph \n3.Graph \n4.Graph \n5.Graph \n6.Graph ")
+            generate_graphs()
+        elif choice == 5:
             print("Exiting program.")
-            break
+            break        
         else:
             print("Invalid choice. Please try again.")
 
